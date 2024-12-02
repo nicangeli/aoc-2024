@@ -1,8 +1,6 @@
 package main
 
 import (
-	"math"
-	"strconv"
 	"strings"
 )
 
@@ -23,78 +21,29 @@ func permutations(levels []int) [][]int {
 	return ps
 }
 
-func isSafe(levels []int) bool {
-	isSafe := true
-	isIncrementing := levels[0] < levels[1]
-	for i, current := range levels {
-		if (i + 1) == len(levels) {
-			break
+func isOnePermutationSafe(reports []int) bool {
+	for _, permutation := range permutations(reports) {
+		if isReportSafe(permutation) {
+			return true
 		}
-
-		next := levels[i+1]
-		if next == current {
-			isSafe = false
-			break
-		}
-
-		if isIncrementing && (next < current) {
-			isSafe = false
-			break
-		}
-
-		if !isIncrementing && (next > current) {
-			isSafe = false
-			break
-		}
-
-		diff := int(math.Abs(float64(next - current)))
-
-		if diff > 3 {
-			isSafe = false
-			break
-		}
-
 	}
 
-	return isSafe
+	return false
 }
 
 func part2(file string) (int, error) {
+	safe := 0
 	lines := strings.Split(file, "\n")
 
-	safe := 0
-
 	for _, line := range lines {
-
-		levelsStr := strings.Split(line, " ")
-		levelsInt := make([]int, len(levelsStr))
-
-		for i, levelStr := range levelsStr {
-			num, err := strconv.Atoi(levelStr)
-			if err != nil {
-				return 0, err
-			}
-			levelsInt[i] = num
+		levels, err := parseReport(line)
+		if err != nil {
+			return 0, err
 		}
 
-		if len(levelsInt) < 2 {
-			safe += 1
-			break
-		}
+		isSafe := isReportSafe(levels)
 
-		isSfe := isSafe(levelsInt)
-
-		isPermutationSafe := false
-		if !isSfe {
-			for _, permutation := range permutations(levelsInt) {
-				if isSafe(permutation) {
-					isPermutationSafe = true
-					break
-				}
-			}
-		}
-
-		if isSfe || isPermutationSafe {
+		if isSafe || isOnePermutationSafe(levels) {
 			safe += 1
 		}
 
