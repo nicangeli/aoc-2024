@@ -1,9 +1,7 @@
 package main
 
 import (
-	"bufio"
 	"math"
-	"os"
 	"strconv"
 	"strings"
 )
@@ -61,18 +59,12 @@ func isSafe(levels []int) bool {
 	return isSafe
 }
 
-func part2() (int, error) {
-	file, err := os.Open("./input.txt")
-	if err != nil {
-		return 0, err
-	}
-
-	scanner := bufio.NewScanner(file)
+func part2(file string) (int, error) {
+	lines := strings.Split(file, "\n")
 
 	safe := 0
 
-	for scanner.Scan() {
-		line := scanner.Text()
+	for _, line := range lines {
 
 		levelsStr := strings.Split(line, " ")
 		levelsInt := make([]int, len(levelsStr))

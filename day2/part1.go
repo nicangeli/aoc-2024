@@ -1,26 +1,17 @@
 package main
 
 import (
-	"bufio"
+	_ "embed"
 	"math"
-	"os"
 	"strconv"
 	"strings"
 )
 
-func part1() (int, error) {
-	file, err := os.Open("./input.txt")
-	if err != nil {
-		return 0, err
-	}
-
-	scanner := bufio.NewScanner(file)
-
+func part1(file string) (int, error) {
 	safe := 0
+	lines := strings.Split(file, "\n")
 
-	for scanner.Scan() {
-		line := scanner.Text()
-
+	for _, line := range lines {
 		levelsStr := strings.Split(line, " ")
 		levelsInt := make([]int, len(levelsStr))
 
