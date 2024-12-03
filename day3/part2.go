@@ -1,7 +1,6 @@
 package main
 
 import (
-	"fmt"
 	"slices"
 	"strconv"
 	"strings"
@@ -10,36 +9,52 @@ import (
 func tokenize(input string) []string {
 	var multiplications []string
 	i := 0
+	enabled := true
 	for i < len(input) {
-		char := string(input[i])
-		if char == "m" {
-			token := input[i : i+4]
-			if token == "mul(" {
-				i = i + 4
-				inner := ""
+		if i+7 > len(input) {
+			break
+		}
 
-				validNums := []string{"1", "2", "3", "4", "5", "6", "7", "8", "9", "0"}
-				innerCount := 0
-				for {
-					char := string(input[i+innerCount])
+		doToken := input[i : i+4]
+		if doToken == "do()" {
+			enabled = true
+			i = i + len(doToken)
+		}
 
-					if slices.Contains(validNums, char) {
-						inner += char
-						innerCount++
-						continue
-					} else if char == "," && !strings.Contains(inner, ",") {
-						inner += char
-						innerCount++
-						continue
-					} else if char == ")" && strings.Contains(inner, ",") && strings.Index(inner, ",") != len(inner)-1 {
-						// successfully parsed
+		donotToken := input[i : i+7]
+		if donotToken == "don't()" {
+			enabled = false
+			i = i + len(donotToken)
+		}
+
+		mulToken := input[i : i+4]
+		if mulToken == "mul(" {
+			i = i + 4
+			inner := ""
+
+			validNums := []string{"1", "2", "3", "4", "5", "6", "7", "8", "9", "0"}
+			innerCount := 0
+			for {
+				char := string(input[i+innerCount])
+
+				if slices.Contains(validNums, char) {
+					inner += char
+					innerCount++
+					continue
+				} else if char == "," && !strings.Contains(inner, ",") {
+					inner += char
+					innerCount++
+					continue
+				} else if char == ")" && strings.Contains(inner, ",") && strings.Index(inner, ",") != len(inner)-1 {
+					// successfully parsed
+					if enabled {
 						multiplications = append(multiplications, inner)
-						i = i + len(inner) // 1 is the final )
-						break
-					} else {
-						i = i + len(inner) // 1 is the final char we tried to read
-						break
 					}
+					i = i + len(inner) // 1 is the final )
+					break
+				} else {
+					i = i + len(inner) // 1 is the final char we tried to read
+					break
 				}
 			}
 		}
@@ -50,7 +65,7 @@ func tokenize(input string) []string {
 	return multiplications
 }
 
-func part2(input string) {
+func part2(input string) int {
 	tokens := tokenize(input)
 
 	sum := 0
@@ -67,5 +82,5 @@ func part2(input string) {
 
 	}
 
-	fmt.Println(sum)
+	return sum
 }

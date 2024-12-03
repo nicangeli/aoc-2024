@@ -2,6 +2,7 @@ package main
 
 import (
 	_ "embed"
+	"fmt"
 )
 
 //go:embed input.txt
@@ -11,11 +12,12 @@ var input string
 var inputEnabled string
 
 func main() {
-	// sum := part1(input)
+	sum := part1(input)
 
-	// fmt.Println(sum)
+	fmt.Println(sum)
 
 	// 169140488
 	// 178794710
-	part2(input)
+	p2 := part2(input)
+	fmt.Println(p2)
 }

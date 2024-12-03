@@ -1,7 +1,6 @@
 package main
 
 import (
-	"fmt"
 	"regexp"
 	"strconv"
 )
@@ -13,8 +12,6 @@ func part1(input string) int {
 	r := regexp.MustCompile("mul\\((\\d+),(\\d+)\\)")
 
 	allMatched := r.FindAllStringSubmatch(input, -1)
-
-	fmt.Println(allMatched)
 
 	sum := 0
 
